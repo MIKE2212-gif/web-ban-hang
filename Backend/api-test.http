@@ -1,0 +1,284 @@
+###########################################################
+# WEB BÁN HÀNG API TEST
+# Sử dụng Rest Client extension để test
+###########################################################
+
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTczNDAyYjE3YmU4MDYwNGVmMDM5OWQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjkzOTc2ODUsImV4cCI6MTc2OTQ4NDA4NX0.LUE5uJe_8Tl7MFOQIayx4vN2xgojDfboGFSat7Riz_0
+
+###########################################################
+# TEST SERVER
+###########################################################
+
+### Kiểm tra server chạy
+GET {{baseUrl}}/
+
+###########################################################
+# AUTH - Xác thực
+###########################################################
+
+### 1. Đăng ký user mới
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Nguyen Van A",
+  "email": "user@example.com",
+  "password": "Password123!",
+  "phone": "0123456789",
+  "address": "123 Street, City"
+}
+
+###
+
+### 2. Đăng ký admin (CHỈ DÙNG CHO DEVELOPMENT)
+POST {{baseUrl}}/api/auth/register-admin
+Content-Type: application/json
+
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "AdminPass123!",
+  "phone": "0987654321",
+  "address": "Admin Street"
+}
+
+###
+
+### 3. Đăng nhập user
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password123!"
+}
+
+###
+
+### 4. Đăng nhập admin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "AdminPass123!"
+}
+
+###
+
+### 5. Lấy thông tin user hiện tại
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+###########################################################
+# USER - Quản lý thông tin user
+###########################################################
+
+### 6. Lấy profile user
+GET {{baseUrl}}/api/user/profile
+Authorization: Bearer {{token}}
+
+###
+
+### 7. Cập nhật profile user
+PUT {{baseUrl}}/api/user/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Nguyen Van B",
+  "phone": "0123456780",
+  "address": "456 New Street"
+}
+
+###########################################################
+# PRODUCT - Sản phẩm công khai
+###########################################################
+
+### 8. Lấy danh sách tất cả sản phẩm
+GET {{baseUrl}}/api/products
+
+###
+
+### 9. Lấy chi tiết sản phẩm (thay ID)
+GET {{baseUrl}}/api/products/650f1a2b3c4d5e6f7g8h9i0j
+
+###########################################################
+# CART - Giỏ hàng
+###########################################################
+
+### 10. Lấy giỏ hàng của user
+GET {{baseUrl}}/api/cart
+Authorization: Bearer {{token}}
+
+###
+
+### 11. Thêm sản phẩm vào giỏ hàng
+POST {{baseUrl}}/api/cart
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "650f1a2b3c4d5e6f7g8h9i0j",
+  "quantity": 2
+}
+
+###
+
+### 12. Cập nhật số lượng sản phẩm trong giỏ
+PUT {{baseUrl}}/api/cart/650f1a2b3c4d5e6f7g8h9i0j
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "quantity": 5
+}
+
+###
+
+### 13. Xóa sản phẩm khỏi giỏ hàng
+DELETE {{baseUrl}}/api/cart/650f1a2b3c4d5e6f7g8h9i0j
+Authorization: Bearer {{token}}
+
+###
+
+### 14. Xóa toàn bộ giỏ hàng
+DELETE {{baseUrl}}/api/cart
+Authorization: Bearer {{token}}
+
+###########################################################
+# ORDER - Đơn hàng
+###########################################################
+
+### 15. Tạo đơn hàng từ giỏ hàng
+POST {{baseUrl}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "shippingAddress": "123 Main Street, City",
+  "paymentMethod": "cod"
+}
+
+###
+
+### 16. Lấy danh sách đơn hàng của user
+GET {{baseUrl}}/api/orders
+Authorization: Bearer {{token}}
+
+###
+
+### 17. Lấy chi tiết đơn hàng
+GET {{baseUrl}}/api/orders/650f1a2b3c4d5e6f7g8h9i0j
+Authorization: Bearer {{token}}
+
+###
+
+### 18. Hủy đơn hàng
+PATCH {{baseUrl}}/api/orders/650f1a2b3c4d5e6f7g8h9i0j/cancel
+Authorization: Bearer {{token}}
+
+###########################################################
+# ADMIN - Quản trị
+###########################################################
+
+### 19. Lấy danh sách tất cả user (admin)
+GET {{baseUrl}}/api/admin/users
+Authorization: Bearer {{token}}
+
+###
+
+### 20. Block/Unblock user
+PATCH {{baseUrl}}/api/admin/users/650f1a2b3c4d5e6f7g8h9i0j/block
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "blocked": true
+}
+
+###
+
+### 21. Tạo sản phẩm (admin)
+POST {{baseUrl}}/api/admin/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Sản phẩm mới",
+  "description": "Mô tả sản phẩm",
+  "price": 299000,
+  "stock": 100,
+  "category": "electronics",
+  "image": "https://example.com/image.jpg"
+}
+
+###
+
+### 22. Lấy danh sách sản phẩm (admin view)
+GET {{baseUrl}}/api/admin/products
+Authorization: Bearer {{token}}
+
+###
+
+### 23. Cập nhật sản phẩm
+PUT {{baseUrl}}/api/admin/products/650f1a2b3c4d5e6f7g8h9i0j
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Sản phẩm cập nhật",
+  "price": 399000,
+  "stock": 50
+}
+
+###
+
+### 24. Xóa sản phẩm
+DELETE {{baseUrl}}/api/admin/products/650f1a2b3c4d5e6f7g8h9i0j
+Authorization: Bearer {{token}}
+
+###
+
+### 25. Lấy danh sách tất cả đơn hàng (admin)
+GET {{baseUrl}}/api/admin/orders
+Authorization: Bearer {{token}}
+
+###
+
+### 26. Cập nhật trạng thái đơn hàng
+PATCH {{baseUrl}}/api/admin/orders/650f1a2b3c4d5e6f7g8h9i0j/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "processing"
+}
+
+###########################################################
+# HƯỚNG DẪN SỬ DỤNG
+###########################################################
+
+# 1. Cài đặt Rest Client extension cho VS Code
+#    Tên: REST Client
+#    ID: humao.rest-client
+
+# 2. Cách chạy request:
+#    - Click vào "Send Request" hoặc nhấn Ctrl+Alt+R
+#    - Hoặc nhấn Alt+R rồi chọn request
+
+# 3. Cách lấy token:
+#    - Chạy request đăng nhập (request 3 hoặc 4)
+#    - Copy token từ response
+#    - Paste vào biến @token ở phía trên
+
+# 4. Thay đổi ID sản phẩm/đơn hàng/user:
+#    - Lấy ID từ response của request trước
+#    - Thay vào URL
+
+# 5. Lưu ý:
+#    - Server cần chạy tại http://localhost:3000
+#    - MongoDB cần kết nối thành công
+#    - Dùng admin token cho admin routes
+#    - User token dùng cho user routes

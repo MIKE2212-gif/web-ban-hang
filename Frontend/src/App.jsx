@@ -1,0 +1,44 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+import Home from "./pages/Home";
+import ProductDetail from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSuccess";
+import Auth from "./pages/Auth";
+import Brand from "./pages/Brand";
+import OnSale from "./pages/OnSale";
+import NewArrivalsPage from "./pages/NewArrivalsPage";
+import SearchResults from "./pages/SearchResults";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import ChatBot from "./components/ChatBot"; // 👈 THÊM DÒNG NÀY
+import { CartProvider } from "./context/CartContext";
+
+function App() {
+  return (
+    <CartProvider>
+      <Header />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/brands" element={<Brand />} />
+        <Route path="/on-sale" element={<OnSale />} />
+        <Route path="/new-arrivals" element={<NewArrivalsPage />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+
+      {/* 🤖 CHATBOT – GẮN Ở ĐÂY */}
+      <ChatBot />
+
+      <Footer />
+    </CartProvider>
+  );
+}
+
+export default App;
