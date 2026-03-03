@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Package, CreditCard, ChevronDown, ArrowRight, ShoppingBag, Minus, Plus } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 export default function EuropeanFashionCheckout() {
   const navigate = useNavigate();
+  const { cartItems, getTotalPrice, updateQuantity, removeFromCart } = useCart();
   const [activeTab, setActiveTab] = useState('guest');
   const [paymentMethod, setPaymentMethod] = useState('card');
-  const [quantity, setQuantity] = useState(1);
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
@@ -23,13 +24,54 @@ export default function EuropeanFashionCheckout() {
   };
 
   const handleCompleteOrder = () => {
-    // Lưu email vào localStorage
-    if (formData.email) {
-      localStorage.setItem('userEmail', formData.email);
+    // Validate form
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.phone || !formData.address) {
+      alert('Vui lòng điền đầy đủ thông tin');
+      return;
     }
+
+    if (cartItems.length === 0) {
+      alert('Giỏ hàng trống');
+      return;
+    }
+
+    // Lưu order info để hiển thị trên trang success
+    localStorage.setItem('userEmail', formData.email);
+    localStorage.setItem('lastOrder', JSON.stringify({
+      formData,
+      items: cartItems,
+      total: getTotalPrice(),
+      paymentMethod
+    }));
+
     // Chuyển hướng đến trang thanh toán thành công
     navigate('/order-success');
   };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(value);
+  };
+
+  // Redirect if cart is empty
+  if (cartItems.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-4">Giỏ hàng trống</h1>
+          <p className="text-gray-600 mb-6">Vui lòng thêm sản phẩm vào giỏ hàng trước khi thanh toán</p>
+          <button 
+            onClick={() => navigate('/')}
+            className="px-6 py-3 bg-black text-white rounded hover:bg-gray-800"
+          >
+            Tiếp tục mua sắm
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
@@ -456,46 +498,53 @@ export default function EuropeanFashionCheckout() {
 
                 {/* Product */}
                 <div className="space-y-6">
-                  <div className="flex gap-5">
-                    <div className="product-image flex-shrink-0">
-                      <img
-                        src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&h=400&fit=crop"
-                        alt="Luxury Handbag"
-                        className="w-28 h-36 object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 space-y-3">
-                      <div>
-                        <h3 className="font-semibold text-[15px] mb-1">Premium Leather Handbag</h3>
-                        <p className="text-sm text-gray-600 font-medium">White · Medium</p>
-                      </div>
-                      
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center border border-gray-200">
-                          <button 
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="quantity-btn border-r border-gray-200"
-                          >
-                            <Minus size={14} />
-                          </button>
-                          <div className="px-4 text-sm font-medium">{quantity}</div>
-                          <button 
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="quantity-btn border-l border-gray-200"
-                          >
-                            <Plus size={14} />
-                          </button>
+                  {cartItems.map((item) => (
+                    <div key={item._id}>
+                      <div className="flex gap-5">
+                        <div className="product-image flex-shrink-0">
+                          <img
+                            src={item.image || item.images?.[0] || 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&h=400&fit=crop'}
+                            alt={item.name}
+                            className="w-28 h-36 object-cover"
+                          />
                         </div>
-                        <button className="text-sm text-gray-500 hover:text-black transition-colors underline">
-                          Remove
-                        </button>
+                        <div className="flex-1 space-y-3">
+                          <div>
+                            <h3 className="font-semibold text-[15px] mb-1">{item.name}</h3>
+                            <p className="text-sm text-gray-600 font-medium">{item.category || 'Product'}</p>
+                          </div>
+                          
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center border border-gray-200">
+                              <button 
+                                onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                className="quantity-btn border-r border-gray-200"
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <div className="px-4 text-sm font-medium">{item.quantity}</div>
+                              <button 
+                                onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                className="quantity-btn border-l border-gray-200"
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+                            <button 
+                              onClick={() => removeFromCart(item._id)}
+                              className="text-sm text-gray-500 hover:text-black transition-colors underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+
+                          <p className="text-lg font-semibold">{formatCurrency(item.price * item.quantity)}</p>
+                        </div>
                       </div>
-
-                      <p className="text-lg font-semibold">₫1,368,000</p>
+                      <div className="divider mt-6"></div>
                     </div>
-                  </div>
-
-                  <div className="divider"></div>
+                  ))}
+                
 
                   {/* Promo Code */}
                   <div>
@@ -517,7 +566,7 @@ export default function EuropeanFashionCheckout() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-[15px]">
                       <span className="text-gray-700 font-medium">Subtotal</span>
-                      <span className="font-semibold">₫1,368,000</span>
+                      <span className="font-semibold">{formatCurrency(getTotalPrice())}</span>
                     </div>
                     <div className="flex justify-between text-[15px]">
                       <span className="text-gray-700 font-medium">Shipping</span>
@@ -534,7 +583,7 @@ export default function EuropeanFashionCheckout() {
                   <div className="flex justify-between items-baseline">
                     <span className="text-lg font-semibold">Total</span>
                     <div className="text-right">
-                      <span className="text-2xl display font-bold">₫1,368,000</span>
+                      <span className="text-2xl display font-bold">{formatCurrency(getTotalPrice())}</span>
                       <p className="text-xs text-gray-600 font-medium mt-1">VND</p>
                     </div>
                   </div>

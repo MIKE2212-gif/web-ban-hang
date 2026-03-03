@@ -50,7 +50,9 @@ exports.createOrder = async (req, res) => {
       orderItems.push({
         productId: product._id,
         price: product.price,
-        quantity: item.quantity
+        quantity: item.quantity,
+        name: product.name,
+        image: product.image || (product.images && product.images[0]) || null
       });
     }
 
@@ -85,8 +87,8 @@ exports.createOrder = async (req, res) => {
     // Commit transaction
     await session.commitTransaction();
 
-    // Populate order data
-    await order[0].populate("items.productId", "name price imageUrl");
+    // Populate order data (request the actual product image fields)
+    await order[0].populate("items.productId", "name price image images");
 
     res.status(201).json({
       message: "Đặt hàng thành công",
@@ -109,7 +111,7 @@ exports.createOrder = async (req, res) => {
 exports.getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.user.userId })
-      .populate("items.productId", "name price imageUrl")
+      .populate("items.productId", "name price image images")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -140,7 +142,7 @@ exports.getOrderDetail = async (req, res) => {
     const order = await Order.findOne({
       _id: id,
       userId: req.user.userId
-    }).populate("items.productId", "name price imageUrl");
+    }).populate("items.productId", "name price image images");
 
     if (!order) {
       return res.status(404).json({

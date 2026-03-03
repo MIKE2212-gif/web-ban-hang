@@ -3,10 +3,28 @@ import { Check, Package, Mail, ArrowRight, Download, Printer } from 'lucide-reac
 
 export default function OrderSuccess() {
   const [showConfetti, setShowConfetti] = useState(true);
+  const [orderData, setOrderData] = useState(null);
 
   useEffect(() => {
     setTimeout(() => setShowConfetti(false), 3000);
+
+    // Load order data from localStorage
+    const lastOrder = localStorage.getItem('lastOrder');
+    if (lastOrder) {
+      try {
+        setOrderData(JSON.parse(lastOrder));
+      } catch (error) {
+        console.error('Error loading order data:', error);
+      }
+    }
   }, []);
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(value);
+  };
 
   const orderDetails = {
     orderNumber: 'ND' + Math.random().toString(36).substr(2, 9).toUpperCase(),
@@ -18,7 +36,7 @@ export default function OrderSuccess() {
       minute: '2-digit'
     }),
     email: localStorage.getItem('userEmail') || 'customer@email.com',
-    total: '₫1,368,000',
+    total: orderData ? formatCurrency(orderData.total) : '₫0',
     estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN', {
       year: 'numeric',
       month: 'long', 
@@ -325,18 +343,31 @@ export default function OrderSuccess() {
 
             {/* Product Summary */}
             <div className="mb-6 pb-6 border-b border-gray-200">
-              <div className="flex gap-5">
-                <img
-                  src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=200&h=260&fit=crop"
-                  alt="Product"
-                  className="w-24 h-32 object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg mb-2">Túi Xách Nữ Da PU Cao Cấp</h3>
-                  <p className="text-sm text-gray-600 font-medium mb-3">Màu Trắng · Size M · Số lượng: 1</p>
-                  <p className="text-xl font-bold">₫1,368,000</p>
+              {!orderData || !orderData.items || orderData.items.length === 0 ? (
+                <p className="text-gray-600">Không có thông tin sản phẩm</p>
+              ) : (
+                <div className="space-y-4">
+                  {orderData.items.map((item, index) => (
+                    <div key={index} className="flex gap-5">
+                      <img
+                        src={item.image || item.images?.[0] || 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=200&h=260&fit=crop'}
+                        alt={item.name}
+                        className="w-24 h-32 object-cover"
+                      />
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
+                        <p className="text-sm text-gray-600 font-medium mb-3">
+                          {item.category || 'Sản phẩm'} · Số lượng: {item.quantity}
+                        </p>
+                        <p className="text-xl font-bold">{formatCurrency(item.price * item.quantity)}</p>
+                      </div>
+                      {index < orderData.items.length - 1 && (
+                        <div className="w-full border-b border-gray-200 my-4"></div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Total */}

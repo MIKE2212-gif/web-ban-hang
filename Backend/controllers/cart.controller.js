@@ -38,7 +38,7 @@ exports.addToCart = async (req, res) => {
         items: [{ productId, quantity }]
       });
 
-      await cart.populate("items.productId", "name price imageUrl");
+      await cart.populate("items.productId", "name price image images");
       return res.status(201).json({
         message: "Thêm sản phẩm vào giỏ hàng thành công",
         cart
@@ -67,7 +67,7 @@ exports.addToCart = async (req, res) => {
     }
 
     await cart.save();
-    await cart.populate("items.productId", "name price imageUrl");
+    await cart.populate("items.productId", "name price image images");
     
     res.json({
       message: "Cập nhật giỏ hàng thành công",
@@ -87,7 +87,7 @@ exports.addToCart = async (req, res) => {
 exports.getMyCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.userId })
-      .populate("items.productId", "name price imageUrl stock");
+      .populate("items.productId", "name price image images stock");
 
     if (!cart) {
       return res.json({ 
@@ -162,7 +162,7 @@ exports.updateCartItem = async (req, res) => {
 
     cart.items[itemIndex].quantity = quantity;
     await cart.save();
-    await cart.populate("items.productId", "name price imageUrl");
+      await cart.populate("items.productId", "name price image images");
 
     res.json({
       message: "Cập nhật giỏ hàng thành công",
@@ -201,7 +201,7 @@ exports.removeFromCart = async (req, res) => {
     );
 
     await cart.save();
-    await cart.populate("items.productId", "name price imageUrl");
+      await cart.populate("items.productId", "name price image images");
 
     res.json({
       message: "Xóa sản phẩm khỏi giỏ hàng thành công",
