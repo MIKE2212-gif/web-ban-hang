@@ -1,6 +1,9 @@
 import React from "react";
 import { Star } from "lucide-react";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
+=======
+>>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
 
 const TopSelling = () => {
   const products = [
@@ -92,7 +95,11 @@ const TopSelling = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {products.map((product) => (
+<<<<<<< HEAD
           <Link key={product.id} to={`/products/${product.id}`} className="group cursor-pointer">
+=======
+          <div key={product.id} className="group cursor-pointer">
+>>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
             <div className="bg-gray-100 rounded-2xl overflow-hidden mb-4 aspect-square">
               <img
                 src={product.image}
@@ -133,7 +140,11 @@ const TopSelling = () => {
                 </>
               )}
             </div>
+<<<<<<< HEAD
           </Link>
+=======
+          </div>
+>>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
         ))}
       </div>
 
