@@ -9,6 +9,7 @@ const handleResponse = async (response) => {
     throw new Error(error.message || 'API request failed');
   }
   return response.json();
+  
 };
 
 export const api = {
@@ -42,26 +43,37 @@ export const api = {
   },
 
   createProduct: async (productData) => {
+    const token = localStorage.getItem('token');
     const response = await fetch(`${API_URL}/products`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify(productData)
     });
     return handleResponse(response);
   },
 
   updateProduct: async (id, productData) => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const token = localStorage.getItem('token');
+    // admin endpoint handles update
+    const response = await fetch(`${API_URL}/admin/products/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify(productData)
     });
     return handleResponse(response);
   },
 
   deleteProduct: async (id) => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
-      method: 'DELETE'
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/products/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
     });
     return handleResponse(response);
   },
@@ -131,6 +143,53 @@ export const api = {
       }
     });
     return handleResponse(response);
+  },
+
+  // ================= ADMIN =================
+  getAdminProducts: async () => {
+    const token = localStorage.getItem('token');
+    const resp = await fetch(`${API_URL}/admin/products`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return handleResponse(resp);
+  },
+
+  getAdminUsers: async () => {
+    const token = localStorage.getItem('token');
+    const resp = await fetch(`${API_URL}/admin/users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return handleResponse(resp);
+  },
+
+  toggleBlockUser: async (id) => {
+    const token = localStorage.getItem('token');
+    const resp = await fetch(`${API_URL}/admin/users/${id}/block`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return handleResponse(resp);
+  },
+
+  getAdminOrders: async () => {
+    const token = localStorage.getItem('token');
+    const resp = await fetch(`${API_URL}/admin/orders`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return handleResponse(resp);
+  },
+
+  updateOrderStatus: async (orderId, status) => {
+    const token = localStorage.getItem('token');
+    const resp = await fetch(`${API_URL}/admin/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ status })
+    });
+    return handleResponse(resp);
   }
 };
 

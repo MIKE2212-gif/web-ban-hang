@@ -94,6 +94,16 @@ function Header() {
           >
             Brands
           </NavLink>
+          {user && user.role === "admin" && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
+              }
+            >
+              Admin
+            </NavLink>
+          )}
         </nav>
 
         {/* SEARCH + ICONS */}

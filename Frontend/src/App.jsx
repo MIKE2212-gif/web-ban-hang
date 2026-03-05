@@ -9,6 +9,17 @@ import Brand from "./pages/Brand";
 import OnSale from "./pages/OnSale";
 import NewArrivalsPage from "./pages/NewArrivalsPage";
 import SearchResults from "./pages/SearchResults";
+
+// --- admin imports
+import AdminLayout from "./components/AdminLayout";
+import AdminRoute from "./components/AdminRoute";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProducts from "./pages/admin/Products";
+import ProductForm from "./pages/admin/ProductForm";
+import AdminOrders from "./pages/admin/Orders";
+import OrderDetail from "./pages/admin/OrderDetail";
+import AdminUsers from "./pages/admin/Users";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot"; // 👈 THÊM DÒNG NÀY
@@ -30,6 +41,25 @@ function App() {
         <Route path="/on-sale" element={<OnSale />} />
         <Route path="/new-arrivals" element={<NewArrivalsPage />} />
         <Route path="/search" element={<SearchResults />} />
+
+        {/* admin area */}
+        <Route
+          path="/admin/*"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="products/new" element={<ProductForm />} />
+          <Route path="products/:id" element={<ProductForm />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<OrderDetail />} />
+          <Route path="users" element={<AdminUsers />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
