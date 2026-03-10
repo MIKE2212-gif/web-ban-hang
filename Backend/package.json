@@ -1,36 +1,25 @@
 {
   "name": "server",
   "version": "1.0.0",
-<<<<<<< HEAD
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "mocha tests/*.test.js --timeout 10000"
-=======
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-<<<<<<< HEAD
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.3",
-=======
-  "dependencies": {
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mongoose": "^9.0.2"
   },
-<<<<<<< HEAD
   "devDependencies": {
     "chai": "^4.3.10",
     "mocha": "^10.2.0",
@@ -38,7 +27,4 @@
     "nodemon": "^3.1.11",
     "supertest": "^6.3.3"
   }
-=======
-  "description": ""
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
 }

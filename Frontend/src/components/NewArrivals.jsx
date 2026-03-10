@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ const NewArrivals = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch data từ Backend khi component mount
   useEffect(() => {
     fetchNewArrivals();
   }, []);
@@ -18,7 +16,6 @@ const NewArrivals = () => {
     try {
       setLoading(true);
       setError(null);
-      
       const response = await api.getNewArrivals();
       setProducts(response.data);
     } catch (err) {
@@ -28,48 +25,6 @@ const NewArrivals = () => {
       setLoading(false);
     }
   };
-=======
-import React from 'react';
-import { Star } from 'lucide-react';
-
-const NewArrivals = () => {
-  const products = [
-    {
-      id: 1,
-      name: "Checkered Shirt",
-      image: "/images/products/Checkered.svg",
-      rating: 5.0,
-      price: 212,
-      originalPrice: 232,
-      discount: "-20%",
-      bgColor: "bg-gray-100"
-    },
-    {
-      id: 2,
-      name: "Skinny Fit Jeans",
-      image: "/images/products/SkinnyFit.svg",
-      rating: 4.0,
-      price: 145,
-      bgColor: "bg-gray-100"
-    },
-    {
-      id: 3,
-      name: "Sleeve T-shirt",
-      image: "/images/products/Sleeve.svg",
-      rating: 3.0,
-      price: 80,
-      bgColor: "bg-gray-100"
-    },
-    {
-      id: 4,
-      name: "Graphic T-shirt",
-      image: "/images/products/T-shirt.svg",
-      rating: 4.5,
-      price: 210,
-      bgColor: "bg-gray-100"
-    }
-  ];
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
 
   const renderStars = (rating) => {
     const stars = [];
@@ -103,7 +58,6 @@ const NewArrivals = () => {
     return stars;
   };
 
-<<<<<<< HEAD
   // Loading state
   if (loading) {
     return (
@@ -141,8 +95,6 @@ const NewArrivals = () => {
     );
   }
 
-=======
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">
@@ -151,23 +103,19 @@ const NewArrivals = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {products.map((product) => (
-<<<<<<< HEAD
-          <Link key={product._id} to={`/products/${product._id}`} className="group cursor-pointer">
+          <Link
+            key={product._id || product.id}
+            to={`/products/${product._id || product.id}`}
+            className="group cursor-pointer"
+          >
             <div className="bg-gray-100 rounded-2xl p-4 mb-4 overflow-hidden">
-=======
-          <div key={product.id} className="group cursor-pointer">
-            <div className={`${product.bgColor} rounded-2xl p-4 mb-4 overflow-hidden`}>
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
               <img
                 src={product.image}
                 alt={product.name}
                 className="w-full h-64 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-<<<<<<< HEAD
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/300x400?text=No+Image';
                 }}
-=======
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
               />
             </div>
 
@@ -182,7 +130,6 @@ const NewArrivals = () => {
 
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold">${product.price}</span>
-<<<<<<< HEAD
               {product.oldPrice && (
                 <>
                   <span className="text-xl text-gray-400 line-through">
@@ -190,33 +137,16 @@ const NewArrivals = () => {
                   </span>
                   <span className="text-sm text-red-500 bg-red-50 px-2 py-1 rounded-full">
                     -{Math.round((1 - product.price / product.oldPrice) * 100)}%
-=======
-              {product.originalPrice && (
-                <>
-                  <span className="text-xl text-gray-400 line-through">
-                    ${product.originalPrice}
-                  </span>
-                  <span className="text-sm text-red-500 bg-red-50 px-2 py-1 rounded-full">
-                    {product.discount}
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
                   </span>
                 </>
               )}
             </div>
-<<<<<<< HEAD
           </Link>
-=======
-          </div>
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
         ))}
       </div>
 
       <div className="text-center">
-<<<<<<< HEAD
         <button className="px-16 py-3 border-2 border-gray-200 rounded-full font-medium hover:bg-gray-50 transition-colors">
-=======
-        <button className="px-16 py-3 border-2 border-black-200 rounded-full font-medium hover:bg-gray-50 transition-colors">
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
           View All
         </button>
       </div>
@@ -224,8 +154,4 @@ const NewArrivals = () => {
   );
 };
 
-<<<<<<< HEAD
 export default NewArrivals;
-=======
-export default NewArrivals;
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8

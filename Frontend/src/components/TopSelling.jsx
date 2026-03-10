@@ -1,9 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
-<<<<<<< HEAD
 import { Link } from "react-router-dom";
-=======
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
 
 const TopSelling = () => {
   const products = [
@@ -30,7 +27,7 @@ const TopSelling = () => {
     {
       id: 3,
       name: "Loose Fit Bermuda Shorts",
-      image: "/images/products/loosefit.svg", // ✅ sửa image -> images
+      image: "/images/products/loosefit.svg",
       rating: 3.0,
       reviews: 5,
       price: 80,
@@ -54,7 +51,6 @@ const TopSelling = () => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
 
-    // ⭐ sao đầy
     for (let i = 0; i < fullStars; i++) {
       stars.push(
         <Star
@@ -64,7 +60,6 @@ const TopSelling = () => {
       );
     }
 
-    // ⭐ nửa sao
     if (hasHalfStar) {
       stars.push(
         <div key="half" className="relative w-4 h-4">
@@ -76,7 +71,6 @@ const TopSelling = () => {
       );
     }
 
-    // ⭐ sao rỗng
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
@@ -95,11 +89,7 @@ const TopSelling = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {products.map((product) => (
-<<<<<<< HEAD
           <Link key={product.id} to={`/products/${product.id}`} className="group cursor-pointer">
-=======
-          <div key={product.id} className="group cursor-pointer">
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
             <div className="bg-gray-100 rounded-2xl overflow-hidden mb-4 aspect-square">
               <img
                 src={product.image}
@@ -122,9 +112,7 @@ const TopSelling = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold">
-                ${product.price}
-              </span>
+              <span className="text-2xl font-bold">${product.price}</span>
 
               {product.originalPrice && (
                 <>
@@ -140,11 +128,7 @@ const TopSelling = () => {
                 </>
               )}
             </div>
-<<<<<<< HEAD
           </Link>
-=======
-          </div>
->>>>>>> a10a021fcec50b7386dcd97d13d2859ec46d40e8
         ))}
       </div>
 
